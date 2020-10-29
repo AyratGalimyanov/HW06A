@@ -1,0 +1,112 @@
+object ScalaExample{  
+    var List(n, x, y, a0) = scala.io.StdIn.readLine().split(' ').map(_.toInt).toList
+    var List(m, z, t, b0) = scala.io.StdIn.readLine().split(' ').map(_.toInt).toList  
+ 
+    val pow_2_16: Long = scala.math.pow(2, 16).toLong - 1
+    val pow_2_30: Long = scala.math.pow(2, 30).toLong
+    
+    def ai(a: Array[Long], i: Int, x: Long, y: Long): Long = {
+        var res: Long = (x * a(i - 1) + y) & pow_2_16
+        return res
+    }
+    
+    // def bi(b_prev: Long, z: Long, t: Long): Long = {
+    //     var base_res: Long = z * b_prev + t
+    //     var res: Long = 0
+        
+    //     if (base_res < 0){
+    //         res = pow_2_30 + base_res
+    //     } else {
+    //         res = base_res & (pow_2_30 - 1)
+    //     }
+    //     return res
+    // }
+    
+    // def ci(b: Long, i: Int, n: Long): Long = {
+    //     var res: Long = b % n
+    //     return res
+    // }
+    
+    def main(args:Array[String]){  
+ 
+        if (m == 0){
+            println('0')
+            return 0
+        }
+        var cum_a: Array[Long] = new Array[Long](n + 1)
+        cum_a(0) = 0
+        cum_a(1) = a0
+        var answer: Long = 0 
+        
+        var c: Array[Long] = new Array[Long](2 * m)
+        var b_prev: Long = b0
+        
+        c(0) = b0 % n
+ 
+        
+        var a: Array[Long] = new Array[Long](n)
+        a(0) = a0
+        
+        var i: Int = 1
+ 
+        while(i < n) {
+            a(i) = ai(a, i, x, y)
+            cum_a(i + 1) = a(i) + cum_a(i)
+            i = i + 1
+        }
+
+            // if (i >= 10000000){
+            //     var x: Int = 1/0
+            // }
+            
+        i = 1
+        
+        var left: Int = 0
+        var right: Int = 0
+        
+        while(i < 2 * m){
+            // var b: Long = bi(b_prev, z, t)
+
+            
+            var b: Long = 0
+ 
+            var base_res: Long = z * b_prev + t
+            var res: Long = 0
+            
+            if (base_res < 0){
+                b = pow_2_30 + base_res
+            } else {
+                b = base_res & (pow_2_30 - 1)
+            }
+            
+
+            
+            
+            c(i) = b % n
+            b_prev = b            
+            
+            
+            if (i % 2 != 0){
+                if (c(i - 1) >= c(i)){
+                    left = c(i).toInt
+                    right = c(i - 1).toInt
+                } else {
+                    left = c(i - 1).toInt
+                    right = c(i).toInt   
+                }
+                
+                // var left: Int = math.min(c(i - 1), c(i)).toInt
+                // var right: Int = math.max(c(i - 1), c(i)).toInt
+                
+                // printf("left=%d, right=%d \n", left, right)
+                var add_value: Long = cum_a(right + 1) - cum_a(left)   
+                // println(add_value)
+                answer += add_value            
+  
+            }  
+            i = i + 1
+        }  
+        println(answer)
+    }  
+    
+}
